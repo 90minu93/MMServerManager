@@ -5,6 +5,7 @@ It sets everything up for you: portable MariaDB database, IP in the config files
 encoder, and starts / stops the servers in the right order.
 
 By **90minutes** · https://www.youtube.com/@90minu93 · MIT License
+With AI's support, I was essentially "vibe coding"—simply checking in every five hours to ask for code edits to build the app, followed by testing (since I’m a software tester by profession).
 
 ## Requirements
 - Windows 10 or newer (64-bit).
