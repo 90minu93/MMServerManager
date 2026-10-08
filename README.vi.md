@@ -1,17 +1,17 @@
 # MMServer Manager v1.0
 
 Bảng điều khiển một cửa sổ cho server offline **Kayito 0.97k** trên Windows.
-Nó tự cấu hình mọi thứ: cơ sở dữ liệu MariaDB portable, IP trong các file cấu hình, encoder
-tạo client, và bật / tắt các server đúng thứ tự.
+Nó tự cấu hình mọi thứ: database MariaDB portable, IP trong các file cấu hình, Encoder
+build client, và bật / tắt các tiến trình server đúng thứ tự.
 
-Tác giả **90minutes** · https://www.youtube.com/@90minu93 · Giấy phép MIT
+Tác giả **90minutes** · https://www.youtube.com/@90minu93 · Giấy phép MIT. Với sự hỗ trợ của AI, về cơ bản tôi thực hiện kiểu "vibe coding" – chỉ đơn giản là kiểm tra tiến độ mỗi 5 giờ một lần và yêu cầu chỉnh sửa mã nguồn nhằm xây dựng ứng dụng, sau đó tiến hành kiểm thử.
 
 ## Yêu cầu
 - Windows 10 trở lên (64-bit).
 - .NET Framework 4.8 (đã có sẵn từ Windows 10 bản 1903 trở lên).
 - Visual C++ Redistributable 2015-2022 bản **x86 (32-bit)**: https://aka.ms/vs/17/release/vc_redist.x86.exe
   (server cần nó; nút **Kiểm tra hệ thống** sẽ báo nếu thiếu).
-  Không có mạng? Repo bạn vừa tải có sẵn bản trong `Dependencies\C++ Redistributables 2017\VC_redist.x86.exe`; link Microsoft mới hơn nên ưu tiên.
+  Không có mạng? Repo bạn vừa tải có sẵn trong `Dependencies\C++ Redistributables 2017\VC_redist.x86.exe`; link Microsoft mới hơn nên ưu tiên nhé.
 - Repo server của Kayito do bạn tự tải từ GitHub: https://github.com/nicomuratona/MuEmu-0.97k-kayito
   (repo có `MuServer`, `Encoder` và `Client`). **Gói này không chứa file server hay client nào.**
 
@@ -37,7 +37,7 @@ Tác giả **90minutes** · https://www.youtube.com/@90minu93 · Giấy phép MI
 1. Chạy `MMServerManager.exe`. Kiểm tra ô **Thư mục server** và **Thư mục client** đã trỏ đúng `MuServer` và `Client`.
 2. Nhập IP mạng LAN của bạn (hoặc bấm **Dò IP**).
 3. Bấm **Kiểm tra hệ thống**, rồi **Bật tất cả**. Lần đầu mất khoảng một phút (giải nén MariaDB và tạo cơ sở dữ liệu).
-4. Bấm **Mở Client** và chơi. Tài khoản mẫu: `test1` đến `test5` (mật khẩu trùng tên tài khoản). Hãy đổi hoặc xóa chúng nếu người khác truy cập được server của bạn.
+4. Bấm **Mở Client** và chơi. Tài khoản demo: `test1` đến `test5` (mật khẩu = tên tài khoản). Hãy đổi hoặc xóa chúng nếu người khác truy cập được server của bạn.
 
 ## Các nút
 | Nút | Chức năng |
@@ -58,7 +58,7 @@ Tác giả **90minutes** · https://www.youtube.com/@90minu93 · Giấy phép MI
 ## Cổng
 | Thành phần | Cổng |
 |---|---|
-| MariaDB | 3307 (chỉ nội bộ) |
+| MariaDB | 3307 (local) |
 | DataServer | 55980 |
 | JoinServer | 55990 |
 | ConnectServer | 44405 |
