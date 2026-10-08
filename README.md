@@ -4,7 +4,7 @@ One-window control panel for the **Kayito 0.97k** offline server on Windows.
 It sets everything up for you: portable MariaDB database, IP in the config files, the client
 encoder, and starts / stops the servers in the right order.
 
-By **90minutes** · https://www.youtube.com/@90minu93 · MIT License
+By **90minutes** · https://www.youtube.com/@90minu93 · MIT License.
 With AI's support, I was essentially "vibe coding"—simply checking in every five hours to ask for code edits to build the app, followed by testing (since I’m a software tester by profession).
 
 ## Requirements
