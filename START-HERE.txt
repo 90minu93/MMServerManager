@@ -1,0 +1,27 @@
+﻿MMServer Manager v{VERSION}  -  by 90minutes  -  https://www.youtube.com/@90minu93
+
+=== TIẾNG VIỆT ===
+1. Tải server từ GitHub: https://github.com/nicomuratona/MuEmu-0.97k-kayito
+   (Code > Download ZIP) rồi giải nén.
+2. Giải nén TOÀN BỘ file zip này vào thư mục vừa giải nén
+   (thư mục có MuServer, Client, Encoder).
+3. Tải file ZIP MariaDB (bản Windows, loại "ZIP file", phiên bản 10.11) tại
+   https://mariadb.org/download rồi đặt cạnh MMServerManager.exe. Không đổi tên file.
+4. Chạy MMServerManager.exe, bấm "Kiểm tra hệ thống", rồi "Bật tất cả".
+   Lần đầu mất khoảng một phút. Nếu báo thiếu Visual C++ thì cài bản x86 ở:
+   https://aka.ms/vs/17/release/vc_redist.x86.exe
+   Không có mạng? Dùng bản có sẵn trong repo vừa tải: Dependencies\C++ Redistributables 2017\VC_redist.x86.exe (link Microsoft ở trên mới hơn và nên ưu tiên).
+5. Bấm "Mở Client" và chơi. Hướng dẫn đầy đủ: thư mục Docs (README.vi.md).
+
+=== ENGLISH ===
+1. Download the server from GitHub: https://github.com/nicomuratona/MuEmu-0.97k-kayito
+   (Code > Download ZIP) and extract it.
+2. Extract EVERYTHING from this zip into that folder
+   (the folder that contains MuServer, Client, Encoder).
+3. Download the MariaDB ZIP (Windows, package type "ZIP file", version 10.11) from
+   https://mariadb.org/download and put it next to MMServerManager.exe. Do not rename it.
+4. Run MMServerManager.exe, press "Check System", then "Start All".
+   The first run takes about a minute. If it says Visual C++ is missing, install the x86 version:
+   https://aka.ms/vs/17/release/vc_redist.x86.exe
+   No internet? Use the copy in the repo you downloaded: Dependencies\C++ Redistributables 2017\VC_redist.x86.exe (the Microsoft link above is newer and preferred).
+5. Press "Open Client" and play. Full guide: the Docs folder (README.md).
