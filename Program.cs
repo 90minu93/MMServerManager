@@ -43,6 +43,12 @@ namespace MMServerManager
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            Application.ThreadException += delegate(object sender, ThreadExceptionEventArgs e)
+            {
+                try { File.AppendAllText(Path.Combine(Settings.BaseDir, "manager.log"), DateTime.Now.ToString("HH:mm:ss") + "  UNEXPECTED ERROR: " + e.Exception + Environment.NewLine); } catch (Exception) { }
+                MessageBox.Show(e.Exception.Message, Credits.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
             Application.Run(new MainForm());
         }
     }
@@ -84,6 +90,10 @@ namespace MMServerManager
                     }
             }
             catch (Exception) { }
+            // folders saved earlier may have been moved: fall back to the folders next to the manager
+            string defServer = Path.Combine(BaseDir, "MuServer"), defClient = Path.Combine(BaseDir, "Client");
+            if (!Directory.Exists(s.ServerDir) && Directory.Exists(defServer)) s.ServerDir = defServer;
+            if (!Directory.Exists(s.ClientDir) && Directory.Exists(defClient)) s.ClientDir = defClient;
             return s;
         }
 
@@ -376,6 +386,7 @@ namespace MMServerManager
             ProcessStartInfo psi = new ProcessStartInfo(exe);
             psi.WorkingDirectory = encDir; psi.UseShellExecute = true; psi.WindowStyle = ProcessWindowStyle.Normal;
             Process p = Process.Start(psi);
+            if (p == null) throw new Exception("Could not start InfoEncoder.");
             string last = null; int stable = 0; bool ready = false;
             for (int t = 0; t < 90; t++)
             {
@@ -534,23 +545,30 @@ namespace MMServerManager
             {
                 if (Directory.Exists(DataDir)) throw new Exception(DataDir + " exists but is not initialized. Delete that folder and retry.");
                 Log("MariaDB: first run, creating the database...");
-                InitData();
+                try { InitData(); }
+                catch (Exception) { DiscardNewData(); throw; }
             }
             Process proc = null;
             if (!IsListening(S.DbPort)) { Log("MariaDB: starting..."); proc = StartMariaDb(); }
-            if (!WaitPort("MariaDB", S.DbPort, 60, proc)) throw new Exception("MariaDB did not start.");
+            if (!WaitPort("MariaDB", S.DbPort, 60, proc))
+            {
+                if (first) DiscardNewData();   // nothing usable yet: start clean next time
+                throw new Exception("MariaDB did not start.");
+            }
             Log("MariaDB: OK, port " + S.DbPort + " listening.");
             if (first)
             {
                 try { LoadSql(); }
-                catch (Exception)
-                {
-                    KillProcs("mariadbd", MariaDir);
-                    Thread.Sleep(2000);
-                    try { Directory.Delete(DataDir, true); } catch (Exception) { }
-                    throw;
-                }
+                catch (Exception) { DiscardNewData(); throw; }
             }
+        }
+
+        // Removes a half-created database so the next run starts clean (first run only)
+        void DiscardNewData()
+        {
+            KillProcs("mariadbd", MariaDir);
+            Thread.Sleep(2000);
+            try { Directory.Delete(DataDir, true); } catch (Exception) { }
         }
 
         void StopMariaDb()
@@ -576,7 +594,7 @@ namespace MMServerManager
             foreach (string n in new string[] { "DataServer", "JoinServer" })
             {
                 string dst = Path.Combine(S.ServerDir, n), src = Path.Combine(S.ServerDir, "MySQL", n);
-                if (File.Exists(Path.Combine(dst, "mysqlcppconn-9-vs14.dll"))) continue;
+                if (Directory.Exists(dst) && Directory.GetFiles(dst, "mysqlcppconn*.dll").Length > 0) continue;   // already the MySQL variant
                 if (!Directory.Exists(src)) throw new Exception(n + ": MySQL version not found (expected " + src + ").");
                 if (FindProcs(n, S.ServerDir).Count > 0) throw new Exception(n + " is running with the old files. Stop it first.");
                 Log(n + ": copying the MySQL version from MySQL\\" + n + " (existing files, if any, are backed up as *.orig)");
@@ -600,7 +618,7 @@ namespace MMServerManager
             string f = Path.Combine(S.ServerDir, rel);
             if (!File.Exists(f)) throw new Exception("Missing " + f);
             Dictionary<string, string> c = ReadCreds();
-            if (!c.ContainsKey("password")) throw new Exception("No database credentials found.");
+            if (!c.ContainsKey("password") || !c.ContainsKey("user") || !c.ContainsKey("database")) throw new Exception("Database credentials are missing or incomplete (DB\\db-credentials.txt).");
             string t = File.ReadAllText(f);
             if (!Regex.IsMatch(t, "(?m)^DataBaseHost=")) throw new Exception(rel + " is not the MySQL version (no DataBaseHost).");
             if (!File.Exists(f + ".bak")) File.Copy(f, f + ".bak");
@@ -688,7 +706,6 @@ namespace MMServerManager
         public const string Url = "https://www.youtube.com/@90minu93";
         public const string Product = "MMServer Manager";
         public const string Version = "1.0";   // shown as v1.0 in the title; also used for the exe file version
-        public const string ServerRepo = "https://github.com/nicomuratona/MuEmu-0.97k-kayito";
         public static string Title { get { return Product + " v" + Version; } }
         public static string Line { get { return "\u00A9 " + Year + " " + Author; } }
     }
@@ -843,11 +860,18 @@ namespace MMServerManager
 
         [DllImport("dwmapi.dll")] static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int val, int size);
 
+        [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)] static extern int SetWindowTheme(IntPtr hwnd, string appName, string idList);
+
+        static void DarkTitleBar(IntPtr h)
+        {
+            try { int on = 1; if (DwmSetWindowAttribute(h, 20, ref on, 4) != 0) DwmSetWindowAttribute(h, 19, ref on, 4); }
+            catch (Exception) { }
+        }
+
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
-            try { int on = 1; if (DwmSetWindowAttribute(Handle, 20, ref on, 4) != 0) DwmSetWindowAttribute(Handle, 19, ref on, 4); }   // dark title bar
-            catch (Exception) { }
+            DarkTitleBar(Handle);
         }
 
         // ----- small builders -----
@@ -988,6 +1012,7 @@ namespace MMServerManager
             txtLog.Font = new Font("Consolas", 9f); txtLog.BackColor = Theme.Input; txtLog.ForeColor = Color.FromArgb(190, 210, 235);
             txtLog.BorderStyle = BorderStyle.FixedSingle; txtLog.SetBounds(16, 504, 788, 174);
             txtLog.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right; Controls.Add(txtLog);
+            txtLog.HandleCreated += delegate { try { SetWindowTheme(txtLog.Handle, "DarkMode_Explorer", null); } catch (Exception) { } };
 
             // footer with copyright
             footer = new Card(); footer.Bordered = false; footer.BackColor = Theme.Panel2; footer.SetBounds(0, 688, 820, 36);
@@ -1055,16 +1080,15 @@ namespace MMServerManager
             {
                 f.Text = Loc.T("about"); f.FormBorderStyle = FormBorderStyle.FixedDialog; f.MaximizeBox = false; f.MinimizeBox = false;
                 f.StartPosition = FormStartPosition.CenterParent; f.ShowInTaskbar = false; f.Icon = Icon;
-                f.ClientSize = new Size(500, 340); f.BackColor = Theme.Bg; f.ForeColor = Theme.Text; f.Font = Font;
+                f.ClientSize = new Size(500, 312); f.BackColor = Theme.Bg; f.ForeColor = Theme.Text; f.Font = Font;
                 PictureBox pb = new PictureBox(); pb.Image = logoImg; pb.SizeMode = PictureBoxSizeMode.Zoom; pb.SetBounds(20, 20, 72, 72); f.Controls.Add(pb);
                 MakeLabel(f, Credits.Title, 104, 22, 380, 30, Color.White, new Font("Segoe UI Semibold", 13f));
                 MakeLabel(f, Credits.Line, 106, 54, 380, 20, Theme.Muted, null);
                 LinkLabel yt = new LinkLabel(); yt.Text = Credits.Url; yt.SetBounds(106, 76, 380, 20); StyleLink(yt);
                 yt.LinkClicked += delegate { OpenUrl(Credits.Url); }; f.Controls.Add(yt);
-                LinkLabel repo = new LinkLabel(); repo.Text = Credits.ServerRepo; repo.SetBounds(106, 98, 380, 20); StyleLink(repo);
-                repo.LinkClicked += delegate { OpenUrl(Credits.ServerRepo); }; f.Controls.Add(repo);
-                MakeLabel(f, Loc.T("aboutCredits") + "\n\n" + Loc.T("aboutNote") + "\n\n" + Loc.T("aboutLicense"), 20, 140, 460, 150, Theme.Text, null);
-                MakeButton(f, "OK", 390, 294, 90, 32, Theme.Accent, delegate { f.Close(); });
+                MakeLabel(f, Loc.T("aboutCredits") + "\n\n" + Loc.T("aboutNote") + "\n\n" + Loc.T("aboutLicense"), 20, 112, 460, 150, Theme.Text, null);
+                MakeButton(f, "OK", 390, 266, 90, 32, Theme.Accent, delegate { f.Close(); });
+                f.HandleCreated += delegate { DarkTitleBar(f.Handle); };   // same dark title bar as the main window
                 f.ShowDialog(this);
             }
         }
@@ -1140,8 +1164,8 @@ namespace MMServerManager
             if (!File.Exists(exe)) { Log("main.exe not found in " + S.ClientDir); return; }
             ProcessStartInfo psi = new ProcessStartInfo(exe);
             psi.WorkingDirectory = S.ClientDir;
-            Process.Start(psi);
-            Log("Client started.");
+            try { Process.Start(psi); Log("Client started."); }
+            catch (Exception ex) { Log("Could not start the client: " + ex.Message); }
         }
 
         void RefreshLights()

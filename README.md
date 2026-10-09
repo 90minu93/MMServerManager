@@ -4,8 +4,9 @@ One-window control panel for the **Kayito 0.97k** offline server on Windows.
 It sets everything up for you: portable MariaDB database, IP in the config files, the client
 encoder, and starts / stops the servers in the right order.
 
-By **90minutes** · https://www.youtube.com/@90minu93 · MIT License.
-With AI's support, I was essentially "vibe coding"—simply checking in every five hours to ask for code edits to build the app, followed by testing (since I’m a software tester by profession).
+By **90minutes** · https://www.youtube.com/@90minu93 · MIT License
+
+With AI's support, I was essentially "vibe coding"—simply checking in every five hours to ask for code edits to build the app, followed by testing (since I'm a software tester by profession).
 
 ## Requirements
 - Windows 10 or newer (64-bit).
@@ -13,11 +14,11 @@ With AI's support, I was essentially "vibe coding"—simply checking in every fi
 - Visual C++ Redistributable 2015-2022, **x86 (32-bit)**: https://aka.ms/vs/17/release/vc_redist.x86.exe
   (the servers need it; **Check System** tells you if it is missing).
   No internet? The repo you downloaded has a copy in `Dependencies\C++ Redistributables 2017\VC_redist.x86.exe`; the Microsoft link is newer and preferred.
-- The Kayito server repo, downloaded by you from GitHub: https://github.com/nicomuratona/MuEmu-0.97k-kayito
-  (it provides `MuServer`, `Encoder` and `Client`). **This package does not contain any server or client files.**
+- The Kayito 0.97k server package from GitHub: search for **MuEmu-0.97k-kayito** by **nicomuratona**
+  (it provides `MuServer`, `Encoder` and `Client`), or follow my video. **This package does not contain any server or client files.**
 
 ## Install
-1. Download the Kayito repo from GitHub (Code > Download ZIP, or `git clone`) and extract it.
+1. Find the Kayito repo on GitHub (search for `MuEmu-0.97k-kayito`, author `nicomuratona`), download it (Code > Download ZIP, or `git clone`) and extract it.
 2. Download `MMServerManager-v1.0.zip` from the Releases page and extract it **into the repo folder**
    (the folder that contains `MuServer`, `Client` and `Encoder`), or extract anywhere and copy the files there.
 3. Download the **MariaDB ZIP** (Windows, package type "ZIP file", version 10.11) from https://mariadb.org/download
@@ -37,6 +38,13 @@ With AI's support, I was essentially "vibe coding"—simply checking in every fi
 ## Quick start
 1. Run `MMServerManager.exe`. Check that **Server folder** and **Client folder** point to `MuServer` and `Client`.
 2. Type your LAN IP (or press **Detect**).
+   - To find it: press `Win+R`, type `cmd`, run `ipconfig`, and copy the **IPv4 Address** of the adapter you use (Ethernet or Wi-Fi), for example `192.168.1.20`.
+   - No network, or an IP that keeps changing? Add a **loopback adapter** with a fixed IP:
+     1. Device Manager > Action > **Add legacy hardware** > "Install the hardware that I manually select from a list" > **Network adapters** > Microsoft > **Microsoft KM-TEST Loopback Adapter** (called "Microsoft Loopback Adapter" on older Windows).
+     2. Press `Win+R`, run `ncpa.cpl`, right-click the new adapter > Properties > **Internet Protocol Version 4 (TCP/IPv4)** > Properties > "Use the following IP address", for example `10.10.10.10` with subnet mask `255.255.255.0` (leave the gateway empty).
+     3. Type that IP in the manager.
+   - A loopback adapter IP only works on the same PC. For friends on your network, use the real IPv4 address from `ipconfig`.
+   - If you change the IP later: press **Stop All**, then **Start All** (the client is rebuilt automatically).
 3. Press **Check System**, then **Start All**. The first run takes a minute (MariaDB is extracted and the database is created).
 4. Press **Open Client** and play. Demo accounts: `test1` to `test5` (password = the account name). Change or remove them if others can reach your server.
 
@@ -81,5 +89,5 @@ Players on other PCs only need TCP 44405 and 55901. Give them the `Client` folde
 
 ## License and credits
 MIT License, see `LICENSE`. Third-party components: see `THIRD-PARTY-NOTICES.md`.
-Server and client source: MuEmu 0.97k by Kayito (https://github.com/nicomuratona/MuEmu-0.97k-kayito).
+Server and client source: MuEmu 0.97k by Kayito (GitHub: nicomuratona/MuEmu-0.97k-kayito).
 This is an unofficial tool. All trademarks belong to their owners; it is not affiliated with any game publisher.

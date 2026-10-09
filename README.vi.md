@@ -1,22 +1,24 @@
 # MMServer Manager v1.0
 
 Bảng điều khiển một cửa sổ cho server offline **Kayito 0.97k** trên Windows.
-Nó tự cấu hình mọi thứ: database MariaDB portable, IP trong các file cấu hình, Encoder
-build client, và bật / tắt các tiến trình server đúng thứ tự.
+Nó tự cấu hình mọi thứ: cơ sở dữ liệu MariaDB portable, IP trong các file cấu hình, encoder
+tạo client, và bật / tắt các server đúng thứ tự.
 
-Tác giả **90minutes** · https://www.youtube.com/@90minu93 · Giấy phép MIT. Với sự hỗ trợ của AI, về cơ bản tôi thực hiện kiểu "vibe coding" – chỉ đơn giản là kiểm tra tiến độ mỗi 5 giờ một lần và yêu cầu chỉnh sửa mã nguồn nhằm xây dựng ứng dụng, sau đó tiến hành kiểm thử.
+Tác giả **90minutes** · https://www.youtube.com/@90minu93 · Giấy phép MIT
+
+Với sự hỗ trợ của AI, mình về cơ bản đã "vibe coding": cứ khoảng năm giờ lại quay lại nhờ sửa code để xây dựng ứng dụng, sau đó tự kiểm thử (vì mình làm nghề kiểm thử phần mềm).
 
 ## Yêu cầu
 - Windows 10 trở lên (64-bit).
 - .NET Framework 4.8 (đã có sẵn từ Windows 10 bản 1903 trở lên).
 - Visual C++ Redistributable 2015-2022 bản **x86 (32-bit)**: https://aka.ms/vs/17/release/vc_redist.x86.exe
   (server cần nó; nút **Kiểm tra hệ thống** sẽ báo nếu thiếu).
-  Không có mạng? Repo bạn vừa tải có sẵn trong `Dependencies\C++ Redistributables 2017\VC_redist.x86.exe`; link Microsoft mới hơn nên ưu tiên nhé.
-- Repo server của Kayito do bạn tự tải từ GitHub: https://github.com/nicomuratona/MuEmu-0.97k-kayito
-  (repo có `MuServer`, `Encoder` và `Client`). **Gói này không chứa file server hay client nào.**
+  Không có mạng? Repo bạn vừa tải có sẵn bản trong `Dependencies\C++ Redistributables 2017\VC_redist.x86.exe`; link Microsoft mới hơn nên ưu tiên.
+- Bộ server Kayito 0.97k trên GitHub: tìm **MuEmu-0.97k-kayito** của tác giả **nicomuratona**
+  (có `MuServer`, `Encoder` và `Client`), hoặc xem video hướng dẫn của mình. **Gói này không chứa file server hay client nào.**
 
 ## Cài đặt
-1. Tải repo Kayito từ GitHub (Code > Download ZIP, hoặc `git clone`) rồi giải nén.
+1. Tìm repo Kayito trên GitHub (tìm `MuEmu-0.97k-kayito`, tác giả `nicomuratona`), tải về (Code > Download ZIP, hoặc `git clone`) rồi giải nén.
 2. Tải `MMServerManager-v1.0.zip` ở trang Releases và giải nén **vào thư mục repo**
    (thư mục có `MuServer`, `Client` và `Encoder`), hoặc giải nén ở đâu đó rồi chép các file vào đó.
 3. Tải **file ZIP MariaDB** (bản Windows, loại "ZIP file", phiên bản 10.11) từ https://mariadb.org/download
@@ -36,8 +38,15 @@ Tác giả **90minutes** · https://www.youtube.com/@90minu93 · Giấy phép MI
 ## Bắt đầu nhanh
 1. Chạy `MMServerManager.exe`. Kiểm tra ô **Thư mục server** và **Thư mục client** đã trỏ đúng `MuServer` và `Client`.
 2. Nhập IP mạng LAN của bạn (hoặc bấm **Dò IP**).
+   - Cách tìm: bấm `Win+R`, gõ `cmd`, chạy `ipconfig`, rồi chép **IPv4 Address** của card mạng bạn đang dùng (Ethernet hoặc Wi-Fi), ví dụ `192.168.1.20`.
+   - Không có mạng, hoặc IP cứ thay đổi? Thêm một **card loopback** với IP cố định:
+     1. Device Manager > Action > **Add legacy hardware** > "Install the hardware that I manually select from a list" > **Network adapters** > Microsoft > **Microsoft KM-TEST Loopback Adapter** (Windows cũ hơn tên là "Microsoft Loopback Adapter").
+     2. Bấm `Win+R`, chạy `ncpa.cpl`, chuột phải vào card vừa tạo > Properties > **Internet Protocol Version 4 (TCP/IPv4)** > Properties > "Use the following IP address", ví dụ `10.10.10.10` với subnet mask `255.255.255.0` (để trống gateway).
+     3. Nhập IP đó vào manager.
+   - IP của card loopback chỉ dùng được trên chính máy đó. Muốn bạn bè trong mạng vào chơi, hãy dùng IPv4 thật lấy từ `ipconfig`.
+   - Nếu đổi IP sau này: bấm **Tắt tất cả**, rồi **Bật tất cả** (client tự được tạo lại).
 3. Bấm **Kiểm tra hệ thống**, rồi **Bật tất cả**. Lần đầu mất khoảng một phút (giải nén MariaDB và tạo cơ sở dữ liệu).
-4. Bấm **Mở Client** và chơi. Tài khoản demo: `test1` đến `test5` (mật khẩu = tên tài khoản). Hãy đổi hoặc xóa chúng nếu người khác truy cập được server của bạn.
+4. Bấm **Mở Client** và chơi. Tài khoản mẫu: `test1` đến `test5` (mật khẩu trùng tên tài khoản). Hãy đổi hoặc xóa chúng nếu người khác truy cập được server của bạn.
 
 ## Các nút
 | Nút | Chức năng |
@@ -58,7 +67,7 @@ Tác giả **90minutes** · https://www.youtube.com/@90minu93 · Giấy phép MI
 ## Cổng
 | Thành phần | Cổng |
 |---|---|
-| MariaDB | 3307 (local) |
+| MariaDB | 3307 (chỉ nội bộ) |
 | DataServer | 55980 |
 | JoinServer | 55990 |
 | ConnectServer | 44405 |
@@ -80,5 +89,5 @@ Người chơi ở máy khác chỉ cần TCP 44405 và 55901. Hãy đưa họ t
 
 ## Giấy phép và ghi công
 Giấy phép MIT, xem `LICENSE`. Các thành phần bên thứ ba: xem `THIRD-PARTY-NOTICES.md`.
-Mã nguồn server và client: MuEmu 0.97k của Kayito (https://github.com/nicomuratona/MuEmu-0.97k-kayito).
+Mã nguồn server và client: MuEmu 0.97k của Kayito (GitHub: nicomuratona/MuEmu-0.97k-kayito).
 Đây là công cụ không chính thức. Mọi nhãn hiệu thuộc về chủ sở hữu tương ứng; công cụ không liên kết với bất kỳ nhà phát hành game nào.

@@ -12,7 +12,7 @@ not legal advice.
 
 ## MuEmu 0.97k (Kayito)
 - The server, Encoder, SQL scripts and client folder are **not** part of this release. You download them
-  yourself from https://github.com/nicomuratona/MuEmu-0.97k-kayito and they remain the work of their
+  yourself from GitHub (repository `MuEmu-0.97k-kayito` by `nicomuratona`) and they remain the work of their
   author, subject to whatever terms that repository states. This project is not affiliated with the author.
 - On your own copy, the manager edits only the IP in `ConnectServer\ServerList.dat` and `MainInfo.ini`,
   copies the MySQL variant of DataServer / JoinServer into place, and keeps the first original of every
