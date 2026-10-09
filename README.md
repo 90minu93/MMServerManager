@@ -53,7 +53,7 @@ The lights show whether each port is listening. The log is also saved to `manage
 
 ## What the manager changes
 - `ConnectServer\ServerList.dat` and `MainInfo.ini`: **only the IP**. Everything else stays as in the original; the first original is kept as `*.orig`.
-- `DataServer` and `JoinServer`: created from `MuServer\MySQL\...` if missing. Their `.ini` gets the local database settings (a random password for the `mu` database user, saved in `MuServer\DB\db-credentials.txt`; do not share that file).
+- `DataServer` and `JoinServer`: created from `MuServer\MySQL\...` if missing. Their `.ini` gets the local database settings (a random password for the `mm` database user, saved in `MuServer\DB\db-credentials.txt`; do not share that file).
 - The database lives in `MuServer\DB\data`, MariaDB in `MuServer\DB\mariadb`. It listens on `127.0.0.1:3307` only.
 
 ## Ports
