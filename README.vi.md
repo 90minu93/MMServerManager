@@ -52,7 +52,7 @@ Tác giả **90minutes** · https://www.youtube.com/@90minu93 · Giấy phép MI
 
 ## Manager thay đổi những gì
 - `ConnectServer\ServerList.dat` và `MainInfo.ini`: **chỉ sửa IP**. Mọi thứ khác giữ nguyên như bản gốc; bản gốc đầu tiên được lưu thành `*.orig`.
-- `DataServer` và `JoinServer`: được tạo từ `MuServer\MySQL\...` nếu chưa có. File `.ini` của chúng được điền thông tin cơ sở dữ liệu cục bộ (mật khẩu ngẫu nhiên cho user `mu`, lưu ở `MuServer\DB\db-credentials.txt`; đừng chia sẻ file này).
+- `DataServer` và `JoinServer`: được tạo từ `MuServer\MySQL\...` nếu chưa có. File `.ini` của chúng được điền thông tin cơ sở dữ liệu cục bộ (mật khẩu ngẫu nhiên cho user `mm`, lưu ở `MuServer\DB\db-credentials.txt`; đừng chia sẻ file này).
 - Cơ sở dữ liệu nằm ở `MuServer\DB\data`, MariaDB ở `MuServer\DB\mariadb`. Nó chỉ lắng nghe `127.0.0.1:3307`.
 
 ## Cổng
