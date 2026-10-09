@@ -84,7 +84,7 @@ Players on other PCs only need TCP 44405 and 55901. Give them the `Client` folde
 - Send `manager.log` when asking for help.
 
 ## Customizing
-- Language: the selector in the top right (English / Tieng Viet).
+- Language: the selector in the top right (English / Vietnamese).
 - Look: put `logo.png` (square; transparent or on a solid black background), `header.png` (wide banner, about 10:1, art on the right) and `icon.ico` in `Assets\`.
 
 ## License and credits
